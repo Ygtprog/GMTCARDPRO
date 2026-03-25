@@ -1329,21 +1329,28 @@ async function sendEmail() {
     toast(`Rapor ${recipients.length} adrese gönderildi ✓`,'success');
   } catch(e){ toast('E-posta hatası: '+e.message,'error'); }
 }
-const channel = supabase
-  .channel('db-changes')
-  .on(
-    'postgres_changes', 
-    { 
-      event: '*', // Ekleme, silme veya güncelleme fark etmez
-      schema: 'public', 
-      table: 'cards' // Tablo adınız 'cards' ise
-    }, 
-    (payload) => {
-      console.log('Değişiklik algılandı, liste güncelleniyor...');
-      loadAdminData(); // Admin listesini yenileyen fonksiyonunuz
-    }
-  )
-  .subscribe();
+const setupRealtime = () => {
+  const channel = supabase
+    .channel('db-changes-check')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'cards' },
+      (payload) => {
+        console.log('CANLI VERİ GELDİ:', payload);
+        
+        // Burada verileri tekrar çeken fonksiyonunuzu çağırmalısınız.
+        // Eğer ismi farklıysa onu yazın (Örn: fetchAllCards, getCards vb.)
+        if (typeof loadAdminData === 'function') {
+          loadAdminData(); 
+        }
+      }
+    )
+    .subscribe((status) => {
+      console.log('Realtime Bağlantı Durumu:', status);
+    });
+};
+
+setupRealtime();
 </script>
 </body>
 </html>
