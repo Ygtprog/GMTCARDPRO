@@ -375,7 +375,16 @@ hr{border:none;border-top:1px solid var(--b1);margin:14px 0;}
       <input class="set-input" id="setEmail" placeholder="ornek@firmaniz.com" type="email">
       <div class="set-desc">Eklediğiniz kartvizitler bu hesaba bağlanır. Takım çalışmasında her kişi kendi e-postasını girer.</div>
     </div>
-   
+    <div class="set-item">
+      <div class="set-lbl">🤖 Görüntü Analizi API Anahtarı <span class="pill pill-amber">Önerilen</span></div>
+      <input class="set-input" id="setApiKey" type="password" placeholder="sk-ant-api…">
+      <div class="set-desc">Yapay zeka destekli kartvizit okuma için gereklidir. Anahtarınız <strong>yalnızca bu cihazda</strong> saklanır, sunucuya gönderilmez.<br><br>
+      <a href="https://console.anthropic.com/settings/keys" target="_blank">→ API anahtarı oluşturmak için tıklayın</a></div>
+    </div>
+    <div class="info-box">
+      <span>💡</span>
+      <span>API anahtarı girilmezse yerel OCR motoru devreye girer. AI modu özellikle Türkçe ve çok dilli kartvizitlerde çok daha yüksek doğruluk sağlar.</span>
+    </div>
     <div class="warn-box">
       <span>🔑</span>
       <div><strong>Yönetici Notu:</strong> Admin paneline erişim için kodun içindeki <code style="color:var(--amber)">ADMIN_EMAIL</code> değerini kendi e-postanızla değiştirin.</div>
@@ -411,7 +420,7 @@ hr{border:none;border-top:1px solid var(--b1);margin:14px 0;}
 const CFG = {
   supabaseUrl: "https://xwkjrgxrbbgxiauaigwx.supabase.co",
   supabaseKey: "sb_publishable_jtswd76bLrz0bU5askceAw_K4IEhaj4",
-  adminEmail:  "admin@mail.com"   // ← Buraya yönetici e-postanızı yazın
+  adminEmail:  "admin@mail.com"   // Buraya yönetici e-postanızı yazın
 };
 
 const db = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
