@@ -682,6 +682,8 @@ async function startApp() {
   loadEmailCfg();
   showScreen('mainApp');
   startCamera();
+  // Start realtime subscription (idempotent — safe to call multiple times)
+  setupRealtime();
 }
 
 /* ═══════════════════════════════════════
@@ -1216,6 +1218,77 @@ function buildReport() {
   </tr>`).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px">Veri bulunamadı</td></tr>';
 }
 function clearReport(){ g('repUser').value=g('repRegion').value=g('repStart').value=g('repEnd').value=''; buildReport(); }
+
+/* ═══════════════════════════════════════
+   REALTIME — Supabase Live Sync
+═══════════════════════════════════════ */
+let realtimeChannel = null;
+
+function setupRealtime() {
+  // Avoid duplicate subscriptions
+  if (realtimeChannel) {
+    db.removeChannel(realtimeChannel);
+    realtimeChannel = null;
+  }
+
+  realtimeChannel = db.channel('cards-live')
+    .on('postgres_changes',
+      { event: 'INSERT', schema: 'public', table: 'cards' },
+      payload => {
+        // Yeni kart: başa ekle (en yeni üstte)
+        const exists = allCards.some(c => c.id === payload.new.id);
+        if (!exists) {
+          allCards = [payload.new, ...allCards];
+          refreshAllViews();
+        }
+      }
+    )
+    .on('postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'cards' },
+      payload => {
+        const idx = allCards.findIndex(c => c.id === payload.new.id);
+        if (idx !== -1) allCards[idx] = payload.new;
+        else allCards = [payload.new, ...allCards];
+        refreshAllViews();
+      }
+    )
+    .on('postgres_changes',
+      { event: 'DELETE', schema: 'public', table: 'cards' },
+      payload => {
+        // Silinen kartı listeden çıkar
+        allCards = allCards.filter(c => c.id !== payload.old.id);
+        // Eğer o kart detay modalında açıksa kapat
+        if (activeCardId === payload.old.id) {
+          closeMD('detailModal');
+          activeCardId = null;
+        }
+        refreshAllViews();
+      }
+    )
+    .subscribe(status => {
+      if (status === 'SUBSCRIBED') {
+        console.log('[GMTCard] Realtime bağlantısı aktif');
+      }
+    });
+}
+
+function refreshAllViews() {
+  // Kullanıcı tarafı
+  renderCards(allCards);
+  renderAdv(allCards);
+  // Admin tarafı — sadece ilgili sekme açıksa yenile
+  const admOpen = !g('adminScreen').classList.contains('hidden');
+  if (admOpen) {
+    populateAdminUserFilter();
+    if (g('atab-allcards').classList.contains('active')) adminFilterCards();
+    if (g('atab-dash').classList.contains('active')) loadDash();
+    if (g('atab-reports').classList.contains('active')) buildReport();
+  } else {
+    // Admin kapalıyken de rapor datasını güncel tut
+    populateAdminUserFilter();
+    buildReport();
+  }
+}
 
 /* ═══════════════════════════════════════
    EXPORT — XLSX
