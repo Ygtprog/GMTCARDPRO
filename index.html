@@ -9,7 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
   --bg:#f6f8fb;--bg2:#ffffff;--bg3:#eef2f7;--bg4:#e3e9f1;
@@ -450,55 +449,17 @@ hr{border:none;border-top:1px solid var(--b1);margin:12px 0}
         <tbody id="repTableBody"></tbody></table>
       </div>
 
-      <p class="sec">E-posta ile Gönder</p>
-
-      <!-- Adım adım kurulum açıklaması -->
-      <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:var(--r2);padding:13px;margin-bottom:12px">
-        <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">📋 Gmail Kurulum Adımları</div>
-        <div style="font-size:12.5px;color:var(--t2);line-height:1.8">
-          <div>1. <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:var(--green)">Google Hesabı → Uygulama Şifreleri</a> sayfasını açın</div>
-          <div>2. "Uygulama seçin" → <b>Posta</b>, "Cihaz seçin" → <b>Diğer</b> → <b>GMTCard</b> yazın → Oluştur</div>
-          <div>3. Size verilen 16 haneli şifreyi aşağıya yapıştırın</div>
-          <div>4. <a href="https://www.emailjs.com/docs/introduction/how-does-emailjs-work/" target="_blank" style="color:var(--green)">EmailJS</a>'e kaydolun → Gmail servisini ekleyin → Public Key, Service ID ve Template ID alın</div>
-        </div>
-      </div>
-
+      <p class="sec">WhatsApp ile Gönder</p>
+      <div class="info-box"><span>💬</span><span>Telefon numarası girerseniz özet rapor o kişiye WhatsApp'ta hazır açılır. Numara boş bırakılırsa WhatsApp açılır, kişiyi siz seçersiniz. Excel dosyası için "Excel'i Paylaş" düğmesini kullanın (telefonda çalışır).</span></div>
       <div class="form-grid" style="margin-bottom:10px">
         <div>
-          <div class="flabel">Gmail Adresiniz (Gönderici)</div>
-          <input class="input-plain" id="ejGmail" placeholder="sizin@gmail.com" type="email" onchange="saveEmailCfg()">
-        </div>
-        <div>
-          <div class="flabel">EmailJS Public Key</div>
-          <input class="input-plain" id="ejKey" placeholder="user_xxxxxxxxxxxxxxxxx" onchange="saveEmailCfg()">
-        </div>
-        <div>
-          <div class="flabel">EmailJS Service ID</div>
-          <input class="input-plain" id="ejService" placeholder="service_xxxxxxx" onchange="saveEmailCfg()">
-        </div>
-        <div>
-          <div class="flabel">EmailJS Template ID</div>
-          <input class="input-plain" id="ejTemplate" placeholder="template_xxxxxxx" onchange="saveEmailCfg()">
-        </div>
-        <div>
-          <div class="flabel">Alıcı Adresler <span style="color:var(--t3);font-weight:400">(virgülle ayırın)</span></div>
-          <input class="input-plain" id="ejRecipients" placeholder="ali@firma.com, veli@firma.com" onchange="saveEmailCfg()">
+          <div class="flabel">Alıcı WhatsApp Numarası <span style="color:var(--t3);font-weight:400">(ülke koduyla, isteğe bağlı)</span></div>
+          <input class="input-plain" id="waNumber" placeholder="905321234567" inputmode="numeric" onchange="saveWaCfg()">
         </div>
       </div>
-
-      <div class="warn-box" style="margin-bottom:10px">
-        <span>💡</span>
-        <div style="font-size:12px">EmailJS Template'inizde şu değişkenleri kullanın:<br>
-        <code style="color:var(--amber)">{{to_email}}</code> &nbsp;
-        <code style="color:var(--amber)">{{subject}}</code> &nbsp;
-        <code style="color:var(--amber)">{{html_content}}</code> &nbsp;
-        <code style="color:var(--amber)">{{record_count}}</code>
-        </div>
-      </div>
-
       <div class="btn-row">
-        <button class="btn btn-ghost" onclick="testEmailCfg()">🔧 Bağlantıyı Test Et</button>
-        <button class="btn btn-primary" onclick="sendEmail()">📧 Raporu Gönder</button>
+        <button class="btn btn-ghost" onclick="shareXlsx()">📎 Excel'i Paylaş</button>
+        <button class="btn btn-primary" onclick="sendWhatsApp()">💬 WhatsApp ile Gönder</button>
       </div>
     </div>
 
@@ -732,8 +693,8 @@ async function startApp() {
   g('mainNav').style.gridTemplateColumns = isAdmin ? 'repeat(4,1fr)' : 'repeat(3,1fr)';
   // Load data
   await Promise.all([loadRegions(), loadCards()]);
-  // Load email config
-  loadEmailCfg();
+  // Load WhatsApp config
+  loadWaCfg();
   showScreen('mainApp');
   // Açılışta Tara sayfası aktif: kamerayı burada başlat (önceden hiç başlatılmıyordu)
   gotoPage('scan');
@@ -1833,109 +1794,62 @@ function exportXLSX(data, filename) {
 }
 
 /* ═══════════════════════════════════════
-   EMAIL — EmailJS + Gmail
+   WHATSAPP — Rapor Paylaşımı
 ═══════════════════════════════════════ */
-function loadEmailCfg() {
-  const cfg = JSON.parse(ls('gmt_email')||'{}');
-  const map = { ejGmail:'gmail', ejKey:'key', ejService:'service', ejTemplate:'template', ejRecipients:'recipients' };
-  Object.entries(map).forEach(([id, k]) => { const el=g(id); if(el) el.value=cfg[k]||''; });
+function loadWaCfg() {
+  const el = g('waNumber'); if (el) el.value = ls('gmt_wa') || '';
+}
+function saveWaCfg() {
+  lss('gmt_wa', val('waNumber').replace(/\D/g,''));
 }
 
-function saveEmailCfg() {
-  const cfg = {
-    gmail:      val('ejGmail'),
-    key:        val('ejKey'),
-    service:    val('ejService'),
-    template:   val('ejTemplate'),
-    recipients: val('ejRecipients')
-  };
-  lss('gmt_email', JSON.stringify(cfg));
+function reportRowsForXlsx() {
+  return reportData.map(c => ({
+    'İsim':c.name||'', 'Firma':c.company||'', 'Ünvan':c.title||'', 'Telefon':c.phone||'',
+    'E-posta':c.email||'', 'Adres':c.address||'', 'Bölge':c.region_name||'', 'Etiket':c.label||'',
+    'Not':c.note||'', 'Ekleyen':c.user_email||'',
+    'Kayıt Tarihi':c.created_at ? new Date(c.created_at).toLocaleString('tr-TR') : ''
+  }));
 }
 
-async function testEmailCfg() {
-  const cfg = JSON.parse(ls('gmt_email')||'{}');
-  if (!cfg.key || !cfg.service || !cfg.template) { toast('Önce tüm EmailJS bilgilerini doldurun','warn'); return; }
-  const recipients = (cfg.recipients||'').split(',').map(r=>r.trim()).filter(Boolean);
-  if (!recipients.length) { toast('En az bir alıcı adresi girin','warn'); return; }
-  try {
-    emailjs.init(cfg.key);
-    await emailjs.send(cfg.service, cfg.template, {
-      to_email:     recipients[0],
-      to_name:      recipients[0].split('@')[0],
-      subject:      'GMTCard PRO — Bağlantı Testi ✓',
-      html_content: '<p style="font-family:Arial,sans-serif;color:#333">Bu bir test e-postasıdır. GMTCard PRO e-posta entegrasyonunuz başarıyla çalışıyor.</p>',
-      record_count: '0',
-      report_date:  new Date().toLocaleString('tr-TR')
-    });
-    toast('Test e-postası gönderildi ✓ — gelen kutunuzu kontrol edin','success');
-  } catch(e) { toast('Test başarısız: ' + e.message + ' — EmailJS ayarlarını kontrol edin','error'); }
+function buildWaText() {
+  const max = 15;
+  const lines = reportData.slice(0, max).map((c, i) =>
+    `${i+1}. *${c.name||'Belirsiz'}*` +
+    (c.company ? ` — ${c.company}` : '') +
+    (c.phone ? `\n   📞 ${c.phone.split(';')[0].trim()}` : '') +
+    (c.region_name ? `\n   🗺️ ${c.region_name}` : '')
+  );
+  let t = `🪪 *GMTCard PRO Raporu*\n📅 ${new Date().toLocaleString('tr-TR')}\n📊 Toplam: ${reportData.length} kayıt\n\n` + lines.join('\n');
+  if (reportData.length > max) t += `\n\n… ve ${reportData.length - max} kayıt daha (tamamı için Excel raporunu paylaşın)`;
+  return t;
 }
 
-async function sendEmail() {
-  const cfg = JSON.parse(ls('gmt_email')||'{}');
-  if (!cfg.key||!cfg.service||!cfg.template) { toast('EmailJS ayarları eksik — lütfen doldurun','warn'); return; }
-  const recipients = (cfg.recipients||'').split(',').map(r=>r.trim()).filter(Boolean);
-  if (!recipients.length) { toast('Alıcı e-posta adresi girilmedi','warn'); return; }
+function sendWhatsApp() {
   if (!reportData.length) { toast('Gönderilecek rapor verisi yok — önce filtre uygulayın','warn'); return; }
+  saveWaCfg();
+  const num = (ls('gmt_wa') || '').replace(/\D/g,'');
+  const text = encodeURIComponent(buildWaText());
+  const url = num ? `https://wa.me/${num}?text=${text}` : `https://wa.me/?text=${text}`;
+  window.open(url, '_blank');
+}
 
-  const tableRows = reportData.slice(0,200).map(c=>`<tr>
-    <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb">${esc(c.name||'')}</td>
-    <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb">${esc(c.company||'')}</td>
-    <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb">${esc(c.region_name||'')}</td>
-    <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb">${esc(c.phone||'')}</td>
-    <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb">${esc(c.email||'')}</td>
-    <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb">${esc(c.label||'')}</td>
-    <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb">${fmt(c.created_at)}</td>
-  </tr>`).join('');
-
-  const htmlContent = `
-  <div style="font-family:Arial,sans-serif;max-width:900px;margin:0 auto">
-    <div style="background:#003d1f;padding:20px 24px;border-radius:10px 10px 0 0">
-      <h1 style="color:#fff;font-size:18px;margin:0">🪪 GMTCard PRO</h1>
-      <p style="color:#a7f3d0;font-size:13px;margin:4px 0 0">Kartvizit Raporu</p>
-    </div>
-    <div style="background:#f9fafb;padding:16px 24px;border:1px solid #e5e7eb;border-top:none">
-      <p style="color:#374151;font-size:13px;margin:0 0 4px">
-        <b>Rapor Tarihi:</b> ${new Date().toLocaleString('tr-TR')} &nbsp;|&nbsp;
-        <b>Toplam Kayıt:</b> ${reportData.length}
-        ${cfg.gmail ? ` &nbsp;|&nbsp; <b>Gönderen:</b> ${esc(cfg.gmail)}` : ''}
-      </p>
-    </div>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;border:1px solid #e5e7eb;border-top:none">
-      <thead>
-        <tr style="background:#00522e;color:#fff">
-          <th style="padding:9px 8px;text-align:left;font-weight:600">İsim</th>
-          <th style="padding:9px 8px;text-align:left;font-weight:600">Firma</th>
-          <th style="padding:9px 8px;text-align:left;font-weight:600">Bölge</th>
-          <th style="padding:9px 8px;text-align:left;font-weight:600">Telefon</th>
-          <th style="padding:9px 8px;text-align:left;font-weight:600">E-posta</th>
-          <th style="padding:9px 8px;text-align:left;font-weight:600">Etiket</th>
-          <th style="padding:9px 8px;text-align:left;font-weight:600">Tarih</th>
-        </tr>
-      </thead>
-      <tbody>${tableRows}</tbody>
-    </table>
-    ${reportData.length>200?`<p style="font-size:11px;color:#9ca3af;padding:10px 8px">* E-postada ilk 200 kayıt gösterilmektedir. Tümü için Excel raporu indirin.</p>`:''}
-    <div style="background:#f3f4f6;padding:12px 24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 10px 10px">
-      <p style="font-size:11px;color:#9ca3af;margin:0">Bu e-posta GMTCard PRO sistemi tarafından otomatik oluşturulmuştur.</p>
-    </div>
-  </div>`;
-
-  try {
-    emailjs.init(cfg.key);
-    toast('E-posta gönderiliyor…','info');
-    for (const to of recipients) {
-      await emailjs.send(cfg.service, cfg.template, {
-        to_email:     to,
-        to_name:      to.split('@')[0],
-        subject:      `GMTCard PRO Raporu — ${new Date().toLocaleDateString('tr-TR')} (${reportData.length} kayıt)`,
-        html_content: htmlContent,
-        report_date:  new Date().toLocaleString('tr-TR'),
-        record_count: String(reportData.length)
-      });
-    }
-    toast(`Rapor ${recipients.length} adrese gönderildi ✓`, 'success');
-  } catch(e) { toast('E-posta hatası: ' + e.message, 'error'); }
+async function shareXlsx() {
+  if (!reportData.length) { toast('Gönderilecek rapor verisi yok — önce filtre uygulayın','warn'); return; }
+  const ws = XLSX.utils.json_to_sheet(reportRowsForXlsx());
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Rapor');
+  const name = `gmtcard_rapor_${new Date().toISOString().slice(0,10)}.xlsx`;
+  const buf = XLSX.write(wb, { bookType:'xlsx', type:'array' });
+  const file = new File([buf], name, { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  if (navigator.canShare && navigator.canShare({ files:[file] })) {
+    try {
+      await navigator.share({ files:[file], title:'GMTCard PRO Raporu', text:`GMTCard PRO Raporu — ${reportData.length} kayıt` });
+    } catch(e) { if (e.name !== 'AbortError') toast('Paylaşım hatası: ' + e.message, 'error'); }
+  } else {
+    XLSX.writeFile(wb, name);
+    toast('Bu cihaz dosya paylaşımını desteklemiyor — Excel indirildi, WhatsApp\'a elle ekleyin','info');
+  }
 }
 
 </script>
