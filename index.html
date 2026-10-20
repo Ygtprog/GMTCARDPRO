@@ -2,24 +2,25 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<meta name="theme-color" content="#ffffff">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>GMTCard PRO</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{
-  --bg:#080f1e;--bg2:#0c1628;--bg3:#111f38;--bg4:#172944;
-  --card:#0e1b30;--card2:#132239;
-  --green:#00c97a;--green2:#00a862;--green3:#4fffab;
-  --glow:rgba(0,201,122,.18);--glow2:rgba(0,201,122,.08);
-  --red:#f04444;--amber:#f59e0b;
-  --t1:#ddeeff;--t2:#6b8fb8;--t3:#2f4a6b;
-  --b1:#162035;--b2:#1f3050;--b3:#2d4570;
+  --bg:#f6f8fb;--bg2:#ffffff;--bg3:#eef2f7;--bg4:#e3e9f1;
+  --card:#ffffff;--card2:#f8fafc;
+  --green:#00a862;--green2:#008f53;--green3:#007a47;
+  --glow:rgba(0,168,98,.16);--glow2:rgba(0,168,98,.07);
+  --red:#e03131;--amber:#d97706;
+  --t1:#0f1b2d;--t2:#4b5d78;--t3:#8696ad;
+  --b1:#e5eaf1;--b2:#d5dce8;--b3:#b8c4d6;
   --r:14px;--r2:10px;--r3:8px;
-  --sh:0 12px 40px rgba(0,0,0,.55);
+  --sh:0 8px 30px rgba(15,27,45,.12);
   --hh:62px;--nh:66px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -93,8 +94,8 @@ nav{height:var(--nh);flex-shrink:0;background:var(--bg2);border-top:1px solid va
 .input-plain::placeholder{color:var(--t3)}
 /* ── BUTTONS ── */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:var(--r2);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .18s;width:100%}
-.btn-primary{background:var(--green);color:#001a0d}
-.btn-primary:hover{background:var(--green3)}
+.btn-primary{background:var(--green);color:#fff}
+.btn-primary:hover{background:var(--green2)}
 .btn-primary:active{transform:scale(.98);opacity:.9}
 .btn-ghost{background:var(--bg3);color:var(--t2);border:1px solid var(--b2)}
 .btn-ghost:hover{background:var(--bg4);color:var(--t1);border-color:var(--b3)}
@@ -110,7 +111,7 @@ nav{height:var(--nh);flex-shrink:0;background:var(--bg2);border-top:1px solid va
 .cam-wrap{position:relative;border-radius:var(--r);overflow:hidden;background:#000;aspect-ratio:4/3;border:1px solid var(--b2)}
 video{width:100%;height:100%;object-fit:cover;display:block}
 .cam-ui{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.scan-box{width:76%;height:53%;border:1px solid rgba(0,201,122,.45);border-radius:8px;position:relative}
+.scan-box{width:84%;aspect-ratio:85/55;border:1.5px solid rgba(0,201,122,.8);border-radius:8px;position:relative;box-shadow:0 0 0 999px rgba(0,0,0,.30)}
 .corner{position:absolute;width:15px;height:15px}
 .tl{top:-1px;left:-1px;border-top:2px solid var(--green);border-left:2px solid var(--green);border-radius:4px 0 0 0}
 .tr{top:-1px;right:-1px;border-top:2px solid var(--green);border-right:2px solid var(--green);border-radius:0 4px 0 0}
@@ -118,7 +119,7 @@ video{width:100%;height:100%;object-fit:cover;display:block}
 .br{bottom:-1px;right:-1px;border-bottom:2px solid var(--green);border-right:2px solid var(--green);border-radius:0 0 4px 0}
 .scan-line{position:absolute;left:4px;right:4px;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 8px var(--green);animation:scanAnim 2.8s ease-in-out infinite}
 @keyframes scanAnim{0%,100%{top:4px}50%{top:calc(100% - 5px)}}
-.cam-label{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(8,15,30,.75);backdrop-filter:blur(8px);border:1px solid var(--b2);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--t2);white-space:nowrap}
+.cam-label{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid var(--b2);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--t2);white-space:nowrap}
 .cam-actions{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px}
 .btn-gallery{width:44px;height:44px;border-radius:11px;border:1px solid var(--b2);background:var(--bg3);color:var(--t2);font-size:19px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .btn-gallery:hover{background:var(--bg4);color:var(--t1)}
@@ -163,7 +164,7 @@ canvas{display:block;width:100%}
 .filter-row-3{grid-template-columns:1fr 1fr auto}
 .filter-row-2{grid-template-columns:1fr 1fr}
 .flabel{font-size:11px;color:var(--t3);margin-bottom:3px}
-.filter-date{width:100%;background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:9px 10px;color:var(--t1);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;color-scheme:dark}
+.filter-date{width:100%;background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:9px 10px;color:var(--t1);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;color-scheme:light}
 .filter-sel{width:100%;background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:9px 10px;color:var(--t1);font-family:'DM Sans',sans-serif;font-size:13px;outline:none}
 .filter-sel option{background:var(--bg3)}
 .bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
@@ -175,17 +176,17 @@ canvas{display:block;width:100%}
 .stat-lbl{font-size:12px;color:var(--t2);margin-top:2px}
 /* ── USER / REGION ROW ── */
 .list-row{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r2);padding:11px 13px;display:flex;align-items:center;gap:10px;margin-bottom:7px}
-.row-avatar{width:34px;height:34px;border-radius:9px;flex-shrink:0;background:linear-gradient(135deg,var(--green),#0ea5e9);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#001a0d}
+.row-avatar{width:34px;height:34px;border-radius:9px;flex-shrink:0;background:linear-gradient(135deg,var(--green),#0ea5e9);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff}
 .row-info{flex:1;overflow:hidden}
 .row-main{font-size:13px;font-weight:600;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row-sub{font-size:11px;color:var(--t2);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row-badge{border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;flex-shrink:0}
 .rb-green{background:var(--glow);color:var(--green)}
-.rb-amber{background:rgba(245,158,11,.12);color:var(--amber)}
+.rb-amber{background:rgba(217,119,6,.12);color:var(--amber)}
 .rb-red{background:rgba(240,68,68,.12);color:var(--red)}
 .row-actions{display:flex;gap:5px;flex-shrink:0}
 /* ── MODAL ── */
-.modal-bg{position:fixed;inset:0;background:rgba(4,10,22,.8);backdrop-filter:blur(5px);z-index:200;display:none;align-items:flex-end}
+.modal-bg{position:fixed;inset:0;background:rgba(15,27,45,.45);backdrop-filter:blur(5px);z-index:200;display:none;align-items:flex-end}
 .modal-bg.open{display:flex;animation:fadeIn .2s}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .sheet{background:var(--bg2);border-radius:20px 20px 0 0;border:1px solid var(--b2);border-bottom:none;width:100%;max-height:92vh;overflow-y:auto;padding:14px 15px calc(24px + env(safe-area-inset-bottom));animation:shUp .28s cubic-bezier(.25,.8,.25,1)}
@@ -194,7 +195,7 @@ canvas{display:block;width:100%}
 .sheet-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;margin-bottom:15px}
 /* ── DETAIL ── */
 .det-head{display:flex;align-items:center;gap:13px;margin-bottom:14px}
-.det-avatar{width:50px;height:50px;border-radius:13px;flex-shrink:0;background:linear-gradient(135deg,var(--green),#0ea5e9);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#001a0d}
+.det-avatar{width:50px;height:50px;border-radius:13px;flex-shrink:0;background:linear-gradient(135deg,var(--green),#0ea5e9);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff}
 .det-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800}
 .det-sub{font-size:12px;color:var(--green3);margin-top:2px}
 .det-row{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--b1)}
@@ -205,8 +206,8 @@ canvas{display:block;width:100%}
 .det-val{font-size:14px;color:var(--t1);margin-top:2px;line-height:1.4}
 .det-val a{color:var(--green);text-decoration:none}
 /* ── INFO BOXES ── */
-.info-box{background:rgba(0,201,122,.06);border:1px solid rgba(0,201,122,.2);border-radius:var(--r2);padding:11px 13px;font-size:12.5px;color:#60d0a0;display:flex;gap:9px;line-height:1.5;margin-bottom:14px}
-.warn-box{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:var(--r2);padding:11px 13px;font-size:12.5px;color:#c49a30;display:flex;gap:9px;line-height:1.5;margin-bottom:14px}
+.info-box{background:rgba(0,201,122,.06);border:1px solid rgba(0,201,122,.2);border-radius:var(--r2);padding:11px 13px;font-size:12.5px;color:#0a7a4d;display:flex;gap:9px;line-height:1.5;margin-bottom:14px}
+.warn-box{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:var(--r2);padding:11px 13px;font-size:12.5px;color:#92620a;display:flex;gap:9px;line-height:1.5;margin-bottom:14px}
 hr{border:none;border-top:1px solid var(--b1);margin:12px 0}
 /* ── TOASTS ── */
 #toasts{position:fixed;top:calc(var(--hh) + 8px);left:50%;transform:translateX(-50%);z-index:999;pointer-events:none;display:flex;flex-direction:column;gap:6px;width:calc(100% - 28px);max-width:400px}
@@ -222,6 +223,13 @@ hr{border:none;border-top:1px solid var(--b1);margin:12px 0}
 .pill{display:inline-flex;align-items:center;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700}
 .pill-g{background:var(--glow);color:var(--green);border:1px solid rgba(0,201,122,.25)}
 .pill-a{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.mic-btn{flex-shrink:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--b2);background:var(--bg3);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;padding:0}
+.mic-btn:hover{border-color:var(--green)}
+.mic-btn.rec{background:var(--red);border-color:var(--red);animation:pulse 1s ease infinite}
+.field.voice-on{border-color:var(--green);box-shadow:0 0 0 3px var(--glow)}
+.no-sr .voice-only{display:none}
+.no-sr .mic-btn{display:none}
+.no-sr .cam-actions .voice-only{display:flex;visibility:hidden}
 .pill-r{background:rgba(240,68,68,.12);color:var(--red);border:1px solid rgba(240,68,68,.25)}
 </style>
 </head>
@@ -287,7 +295,7 @@ hr{border:none;border-top:1px solid var(--b1);margin:12px 0}
         <div class="cam-actions">
           <button class="btn-gallery" onclick="g('fileIn').click()">🖼️</button>
           <button class="btn-shutter" onclick="capturePhoto()"><div class="shutter-inner"></div></button>
-          <div style="width:44px"></div>
+          <button class="btn-gallery voice-only" onclick="startGuided()" title="Sesle doldur">🎙️</button>
         </div>
         <input type="file" id="fileIn" accept="image/*" class="hidden" onchange="loadFile(event)">
       </div>
@@ -316,6 +324,7 @@ hr{border:none;border-top:1px solid var(--b1);margin:12px 0}
             </div>
             <div class="field"><span class="field-ico">📝</span><textarea id="fNote" placeholder="Not (isteğe bağlı)" rows="2"></textarea></div>
           </div>
+          <button class="btn btn-ghost voice-only" style="margin-top:10px" onclick="startGuided()">🎙️ Boş Alanları Sesle Doldur</button>
           <div class="btn-row">
             <button class="btn btn-ghost" onclick="resetScan()">← Yeni Tarama</button>
             <button class="btn btn-primary" onclick="saveCard()">💾 Kaydet</button>
@@ -583,7 +592,9 @@ hr{border:none;border-top:1px solid var(--b1);margin:12px 0}
 ═══════════════════════════════════════ */
 const CFG = {
   url:  "https://xwkjrgxrbbgxiauaigwx.supabase.co",
-  key:  "sb_publishable_jtswd76bLrz0bU5askceAw_K4IEhaj4"
+  key:  "sb_publishable_jtswd76bLrz0bU5askceAw_K4IEhaj4",
+  aiUrl: "",   // İsteğe bağlı: Cloudflare Worker adresi (worker.js). Boşsa yalnızca yerel OCR kullanılır.
+  aiToken: ""  // İsteğe bağlı: Worker'daki APP_TOKEN ile aynı değer
 };
 const db = supabase.createClient(CFG.url, CFG.key);
 
@@ -640,6 +651,7 @@ function showScreen(id) {
    INIT
 ═══════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', async () => {
+  injectMics();
   // Restore session
   const sess = ls('gmt_session');
   if (sess) {
@@ -697,6 +709,7 @@ async function doSetup() {
 }
 
 function doLogout() {
+  stopCamera(); stopVoice();
   localStorage.removeItem('gmt_session');
   currentUser = null;
   showScreen('loginScreen');
@@ -722,7 +735,9 @@ async function startApp() {
   // Load email config
   loadEmailCfg();
   showScreen('mainApp');
-  // Kamera BAŞLATILMIYOR — sadece Tara sekmesine geçince açılır
+  // Açılışta Tara sayfası aktif: kamerayı burada başlat (önceden hiç başlatılmıyordu)
+  gotoPage('scan');
+  getOcrWorker().catch(()=>{}); // dil verisini arka planda ısıt
   // Start realtime subscription (idempotent — safe to call multiple times)
   setupRealtime();
 }
@@ -749,199 +764,519 @@ function populateRegionDropdowns() {
 /* ═══════════════════════════════════════
    CAMERA & OCR
 ═══════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   YARDIMCILAR (Türkçe karakter bağımsız eşleştirme)
+═══════════════════════════════════════ */
+const fold = s => String(s||'').toLocaleLowerCase('tr').replace(/\u0307/g,'')
+  .replace(/ı/g,'i').replace(/ş/g,'s').replace(/ç/g,'c').replace(/ğ/g,'g')
+  .replace(/ö/g,'o').replace(/ü/g,'u').replace(/â/g,'a').replace(/î/g,'i').replace(/û/g,'u');
+const titleCase = s => String(s||'').trim().split(/\s+/).map(w => w.charAt(0).toLocaleUpperCase('tr') + w.slice(1).toLocaleLowerCase('tr')).join(' ');
+
+/* ═══════════════════════════════════════
+   KAMERA
+═══════════════════════════════════════ */
+// Kılavuz kutusunun (+küçük pay) görünür 4:3 alan içindeki oranı
+const SCAN_CROP = { x:.05, y:.105, w:.90, h:.79 };
+let camBusy = false, camRetry = 0;
+
+function hasLiveStream() {
+  const v = g('video');
+  return !!(v && v.srcObject && v.srcObject.getVideoTracks().some(t => t.readyState === 'live'));
+}
+function isScanActive() {
+  return !g('mainApp').classList.contains('hidden')
+      && g('pg-scan').classList.contains('active')
+      && !g('camView').classList.contains('hidden');
+}
+
 async function startCamera() {
+  const video = g('video');
+  if (hasLiveStream()) { if (video.paused) video.play().catch(()=>{}); return; }
+  if (camBusy) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    toast('Bu tarayıcı kamerayı desteklemiyor — galeriden yükleyebilirsiniz','warn'); return;
+  }
+  camBusy = true;
+  let failed = false;
   try {
-    // Zaten aktif stream varsa tekrar başlatma
-    const video = g('video');
-    if (video.srcObject && video.srcObject.active) return;
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:'environment', width:{ideal:1920}, height:{ideal:1080}}
-    });
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video:{ facingMode:{ideal:'environment'}, width:{ideal:1920}, height:{ideal:1080} }, audio:false
+      });
+    } catch(e) {
+      if (e && (e.name === 'NotAllowedError' || e.name === 'SecurityError')) throw e;
+      stream = await navigator.mediaDevices.getUserMedia({ video:true, audio:false });
+    }
+    // İstek sürerken sekme değiştiyse akışı hemen bırak
+    if (!isScanActive()) { stream.getTracks().forEach(t => t.stop()); return; }
     video.srcObject = stream;
-  } catch(e) { toast('Kamera açılamadı — galeriden yükleyebilirsiniz','warn'); }
+    video.onloadedmetadata = () => video.play().catch(()=>{});
+    await video.play().catch(()=>{});
+    const tr = stream.getVideoTracks()[0];
+    tr.onended = () => { if (isScanActive()) setTimeout(startCamera, 300); };
+    try { // sürekli otomatik odak
+      const caps = tr.getCapabilities ? tr.getCapabilities() : {};
+      if (caps.focusMode && caps.focusMode.includes('continuous')) await tr.applyConstraints({ advanced:[{focusMode:'continuous'}] });
+    } catch(_) {}
+  } catch(e) {
+    failed = true;
+    toast(e && e.name === 'NotAllowedError'
+      ? 'Kamera izni verilmedi — tarayıcı ayarlarından izin verin veya galeriyi kullanın'
+      : 'Kamera açılamadı — galeriden yükleyebilirsiniz','warn');
+  } finally {
+    camBusy = false;
+    if (hasLiveStream()) camRetry = 0;
+    else if (!failed && isScanActive() && ++camRetry < 4) startCamera();
+  }
 }
 
 function stopCamera() {
   const video = g('video');
-  if (video.srcObject) {
-    video.srcObject.getTracks().forEach(t => t.stop());
+  if (video && video.srcObject) {
+    video.srcObject.getTracks().forEach(t => { t.onended = null; t.stop(); });
     video.srcObject = null;
   }
 }
 
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopCamera(); else if (isScanActive()) startCamera();
+});
+window.addEventListener('pageshow', () => { if (isScanActive()) startCamera(); });
+
 function capturePhoto() {
-  const video=g('video'), canvas=g('canvas');
-  canvas.width=video.videoWidth||1280; canvas.height=video.videoHeight||720;
-  canvas.getContext('2d').drawImage(video,0,0);
+  const video = g('video'), canvas = g('canvas');
+  const vw = video.videoWidth, vh = video.videoHeight;
+  if (!vw || !vh) { toast('Kamera henüz hazır değil, bir saniye bekleyin','warn'); return; }
+  // object-fit:cover ile görünen 4:3 alanı bul, sonra kılavuz kutusunu kırp
+  const ca = 4/3, va = vw/vh;
+  let sw = vw, sh = vh, sx = 0, sy = 0;
+  if (va > ca) { sw = vh*ca; sx = (vw-sw)/2; } else { sh = vw/ca; sy = (vh-sh)/2; }
+  const cx = sx + sw*SCAN_CROP.x, cy = sy + sh*SCAN_CROP.y, cw = sw*SCAN_CROP.w, ch = sh*SCAN_CROP.h;
+  canvas.width = Math.round(cw); canvas.height = Math.round(ch);
+  canvas.getContext('2d').drawImage(video, cx, cy, cw, ch, 0, 0, canvas.width, canvas.height);
   showResult();
 }
 
 function loadFile(e) {
-  const file=e.target.files[0]; if(!file) return;
-  const img=new Image();
-  img.onload=()=>{ const c=g('canvas'); c.width=img.width; c.height=img.height; c.getContext('2d').drawImage(img,0,0); showResult(); };
-  img.src=URL.createObjectURL(file); e.target.value='';
+  const file = e.target.files[0]; if (!file) return;
+  const img = new Image();
+  img.onload = () => {
+    const s = Math.min(1, 2400 / Math.max(img.width, img.height));
+    const c = g('canvas'); c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(img.src);
+    showResult();
+  };
+  img.src = URL.createObjectURL(file); e.target.value = '';
 }
 
 function showResult() {
+  stopCamera();
   g('camView').classList.add('hidden');
   g('resultView').classList.remove('hidden');
   g('formWrap').classList.add('hidden');
-  const old=g('stIcon'); if(old) old.remove();
-  g('stSpinner').style.display='block';
-  g('engBadge').className='eng-badge';
-  g('engLabel').textContent='OCR motoru çalışıyor…';
-  g('stTitle').textContent='Görüntü işleniyor';
-  g('stSub').textContent='Lütfen bekleyin…';
+  document.querySelector('.preview-wrap').classList.remove('hidden');
+  const old = g('stIcon'); if (old) old.remove();
+  g('stSpinner').style.display = 'block';
+  g('engBadge').className = 'eng-badge';
+  g('engLabel').textContent = CFG.aiUrl ? 'Akıllı tarama' : 'OCR motoru çalışıyor…';
+  g('stTitle').textContent = 'Görüntü işleniyor';
+  g('stSub').textContent = 'Lütfen bekleyin…';
   runTesseractOCR(g('canvas'));
 }
 
 function resetScan() {
+  stopVoice();
   g('camView').classList.remove('hidden');
   g('resultView').classList.add('hidden');
   clearScanForm();
+  startCamera();
+}
+
+/* ═══════════════════════════════════════
+   GÖRÜNTÜ ÖN İŞLEME
+═══════════════════════════════════════ */
+function grayFrom(canvas) {
+  const MAX = 2200, MIN = 1600;
+  let s = 1;
+  if (canvas.width > MAX) s = MAX / canvas.width; else if (canvas.width < MIN) s = MIN / canvas.width;
+  const w = Math.round(canvas.width*s), h = Math.round(canvas.height*s);
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const x = c.getContext('2d', { willReadFrequently:true });
+  x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+  x.drawImage(canvas, 0, 0, w, h);
+  const d = x.getImageData(0, 0, w, h).data;
+  const gray = new Uint8ClampedArray(w*h);
+  for (let i = 0, j = 0; i < d.length; i += 4, j++) gray[j] = (d[i]*299 + d[i+1]*587 + d[i+2]*114) / 1000;
+  return { gray, w, h };
+}
+function grayToCanvas(gray, w, h) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const x = c.getContext('2d'); const im = x.createImageData(w, h);
+  for (let i = 0, j = 0; i < gray.length; i++, j += 4) { im.data[j] = im.data[j+1] = im.data[j+2] = gray[i]; im.data[j+3] = 255; }
+  x.putImageData(im, 0, 0); return c;
+}
+function invertGray(gray) { const o = new Uint8ClampedArray(gray.length); for (let i = 0; i < gray.length; i++) o[i] = 255 - gray[i]; return o; }
+
+// %2–%98 histogram germe: zemin ne olursa olsun metin/zemin farkını açar
+function stretchGray(gray) {
+  const n = gray.length, hist = new Uint32Array(256);
+  for (let i = 0; i < n; i++) hist[gray[i]]++;
+  let lo = 0, hi = 255, acc = 0;
+  for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= n*0.02) { lo = v; break; } }
+  acc = 0;
+  for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= n*0.02) { hi = v; break; } }
+  if (hi - lo < 30) return gray;
+  const out = new Uint8ClampedArray(n), k = 255 / (hi - lo);
+  for (let i = 0; i < n; i++) out[i] = (gray[i] - lo) * k;
+  return out;
+}
+
+// Yerel ortalamaya göre eşikleme (integral görüntü): gradyan / renkli / gölgeli zeminde çalışır
+function adaptiveBinarize(gray, w, h) {
+  const r = Math.max(8, Math.round(w/28));
+  const W = w + 1, integ = new Uint32Array(W*(h+1));
+  for (let y = 0; y < h; y++) {
+    let row = 0;
+    for (let x = 0; x < w; x++) { row += gray[y*w+x]; integ[(y+1)*W+x+1] = integ[y*W+x+1] + row; }
+  }
+  const out = new Uint8ClampedArray(w*h);
+  for (let y = 0; y < h; y++) {
+    const y0 = Math.max(0, y-r), y1 = Math.min(h-1, y+r);
+    for (let x = 0; x < w; x++) {
+      const x0 = Math.max(0, x-r), x1 = Math.min(w-1, x+r);
+      const cnt = (x1-x0+1)*(y1-y0+1);
+      const sum = integ[(y1+1)*W+x1+1] - integ[y0*W+x1+1] - integ[(y1+1)*W+x0] + integ[y0*W+x0];
+      out[y*w+x] = gray[y*w+x]*cnt < sum*0.90 ? 0 : 255;
+    }
+  }
+  return out;
+}
+
+/* ═══════════════════════════════════════
+   OCR
+═══════════════════════════════════════ */
+let ocrWorker = null, ocrWorkerP = null, ocrLabel = '';
+function getOcrWorker() {
+  if (!ocrWorkerP) {
+    ocrWorkerP = Tesseract.createWorker('tur+eng', 1, {
+      logger: m => { if (m.status === 'recognizing text') { const el = g('stSub'); if (el) el.textContent = ocrLabel + ' %' + Math.round(m.progress*100); } }
+    }).then(async w => {
+      await w.setParameters({ preserve_interword_spaces:'1', user_defined_dpi:'300' });
+      ocrWorker = w; return w;
+    }).catch(e => { ocrWorkerP = null; throw e; });
+  }
+  return ocrWorkerP;
+}
+
+function linesFromData(data) {
+  const out = [];
+  (data.blocks || []).forEach(b => (b.paragraphs || []).forEach(p => (p.lines || []).forEach(l => {
+    out.push({ text:(l.text || '').trim(), conf:l.confidence || 0 });
+  })));
+  if (!out.length) (data.text || '').split('\n').forEach(t => out.push({ text:t.trim(), conf:60 }));
+  return out;
+}
+const cleanLine = t => String(t||'').replace(/[|¦_~`^<>{}\[\]\\]+/g,' ').replace(/\s{2,}/g,' ').trim();
+
+// Anlamsız / düşük güvenli satırları ele (forma çöp yazılmasını önler)
+function isGarbage(l) {
+  const t = l.text;
+  if (t.length < 3) return true;
+  const alnum = (t.match(/[A-Za-z0-9ÇĞİÖŞÜçğıöşü]/g) || []).length;
+  if (alnum / t.length < 0.6) return true;
+  if (/(.)\1{3,}/.test(t)) return true;
+  if (!/[aeıioöuüAEIİOÖUÜ\d@]/.test(t)) return true;
+  const minConf = /@|\d{3,}/.test(t) ? 35 : 55;
+  return l.conf < minConf;
+}
+function scorePass(lines) {
+  const good = lines.map(l => ({ text:cleanLine(l.text), conf:l.conf })).filter(l => !isGarbage(l));
+  let s = 0; good.forEach(l => { s += l.text.length * (l.conf/100); });
+  const t = good.map(l => l.text).join('\n');
+  if (/[\w.+\-]+\s*@\s*[\w\-]+\.[a-z]{2,}/i.test(t)) s += 60;
+  if (/(\d[\s.\-()\/]*){10,}/.test(t)) s += 60;
+  return { score:s, text:t };
+}
+
+async function ocrPass(worker, canvas, psm, label) {
+  ocrLabel = label;
+  await worker.setParameters({ tessedit_pageseg_mode:String(psm) });
+  const { data } = await worker.recognize(canvas);
+  return scorePass(linesFromData(data));
 }
 
 async function runTesseractOCR(canvas) {
   try {
-    // Görüntüyü ön işle: büyüt + keskinleştir + kontrast
-    const proc = preprocessForOCR(canvas);
-
-    // PSM 6 = düzenli blok metin (kartvizitler için ideal)
-    const result = await Tesseract.recognize(proc, 'tur+eng', {
-      tessedit_pageseg_mode: 6,
-      preserve_interword_spaces: 1,
-      tessedit_char_whitelist: ''
-    });
-
-    const parsed = smartParse(result.data.text);
-    fillScanForm(parsed);
-    setStatus('ok','Tarama tamamlandı','Bilgileri kontrol edip düzenleyebilirsiniz');
-    g('formWrap').classList.remove('hidden');
-  } catch(e) {
-    setStatus('err','Tarama başarısız',e.message);
-    g('formWrap').classList.remove('hidden');
-  }
-}
-
-function enhanceContrast(ctx, w, h) {
-  const img = ctx.getImageData(0, 0, w, h);
-  const d   = img.data;
-
-  // 1) Grayscale + adaptive contrast (daha agresif)
-  for (let i = 0; i < d.length; i += 4) {
-    const gray = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
-    // S-eğrisi: orta tonları iter, siyah/beyazı ittir
-    const v = Math.min(255, Math.max(0, (gray - 128) * 1.6 + 128));
-    d[i] = d[i+1] = d[i+2] = v;
-  }
-  ctx.putImageData(img, 0, 0);
-
-  // 2) Sharpening (unsharp mask)
-  const sharp = ctx.getImageData(0, 0, w, h);
-  const src   = sharp.data;
-  const blurred = ctx.getImageData(0, 0, w, h);
-  // Basit 3x3 Gaussian blur taklit
-  for (let y = 1; y < h - 1; y++) {
-    for (let x = 1; x < w - 1; x++) {
-      const idx = (y * w + x) * 4;
-      let sum = 0;
-      for (let dy = -1; dy <= 1; dy++) {
-        for (let dx = -1; dx <= 1; dx++) {
-          sum += src[((y+dy)*w+(x+dx))*4];
-        }
-      }
-      blurred.data[idx] = blurred.data[idx+1] = blurred.data[idx+2] = sum / 9;
+    // 1) İsteğe bağlı: görsel yapay zekâ (CFG.aiUrl tanımlıysa)
+    if (CFG.aiUrl) {
+      try { const r = await scanWithAI(canvas); if (r) { finishScan(r, 'Akıllı tarama'); return; } }
+      catch(e) { console.warn('Akıllı tarama başarısız, yerel OCR kullanılıyor', e); g('stSub').textContent = 'Yerel OCR’a geçiliyor…'; }
     }
+    // 2) Yerel OCR — birden çok geçiş, en iyisini seç
+    g('engLabel').textContent = 'OCR motoru çalışıyor…';
+    const worker = await getOcrWorker();
+    const { gray, w, h } = grayFrom(canvas);
+    let mean = 0, n = 0; for (let i = 0; i < gray.length; i += 7) { mean += gray[i]; n++; } mean /= n;
+    const dark = mean < 105;                       // koyu zemin → metni siyaha çevir
+    const prep = (inv, bin) => {
+      const a = stretchGray(inv ? invertGray(gray) : gray);
+      return grayToCanvas(bin ? adaptiveBinarize(a, w, h) : a, w, h);
+    };
+    let best = await ocrPass(worker, prep(dark, true), 11, '1/2');
+    const p2 = await ocrPass(worker, prep(dark, false), 6, '2/2');
+    if (p2.score > best.score) best = p2;
+    if (best.score < 90) {                         // zayıf sonuç: ters kutupluluğu da dene
+      const p3 = await ocrPass(worker, prep(!dark, true), 11, 'ek geçiş');
+      if (p3.score > best.score) best = p3;
+    }
+    finishScan(smartParse(best.text), 'Yerel OCR');
+  } catch(e) {
+    setStatus('err', 'Tarama başarısız', e.message || String(e));
+    g('formWrap').classList.remove('hidden');
   }
-  // Unsharp: keskin = orijinal + 0.7*(orijinal - blur)
-  for (let i = 0; i < src.length; i += 4) {
-    const v = Math.min(255, Math.max(0, src[i] + 0.7 * (src[i] - blurred.data[i])));
-    src[i] = src[i+1] = src[i+2] = v;
-  }
-  ctx.putImageData(sharp, 0, 0);
 }
 
-function preprocessForOCR(srcCanvas) {
-  // Tesseract en iyi ~300dpi'de çalışır. Küçük görselleri büyüt.
-  const MIN_DIM = 1400;
-  const scale   = srcCanvas.width < MIN_DIM ? Math.ceil(MIN_DIM / srcCanvas.width) : 1;
-  const w = srcCanvas.width  * scale;
-  const h = srcCanvas.height * scale;
+function finishScan(parsed, engine) {
+  fillScanForm(parsed);
+  g('engLabel').textContent = engine;
+  const filled = ['name','company','title','phone','email','address'].filter(k => parsed[k]).length;
+  if (!filled) setStatus('err', 'Metin okunamadı', 'Kartı düz ve aydınlık tutup tekrar deneyin ya da 🎙️ ile söyleyin');
+  else setStatus('ok', 'Tarama tamamlandı', 'Okunamayan alanlar boş bırakıldı — kontrol edin, eksikleri 🎙️ ile söyleyebilirsiniz');
+  g('formWrap').classList.remove('hidden');
+}
 
-  const out = document.createElement('canvas');
-  out.width = w; out.height = h;
-  const ctx = out.getContext('2d');
+/* ── İsteğe bağlı görsel yapay zekâ (Cloudflare Worker üzerinden) ── */
+async function scanWithAI(canvas) {
+  const s = Math.min(1, 1600 / Math.max(canvas.width, canvas.height));
+  const c = document.createElement('canvas'); c.width = Math.round(canvas.width*s); c.height = Math.round(canvas.height*s);
+  c.getContext('2d').drawImage(canvas, 0, 0, c.width, c.height);
+  const image = c.toDataURL('image/jpeg', 0.85).split(',')[1];
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 25000);
+  try {
+    const r = await fetch(CFG.aiUrl, { method:'POST', signal:ctl.signal,
+      headers:{ 'Content-Type':'application/json', 'x-app-token':CFG.aiToken || '' }, body:JSON.stringify({ image }) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    const out = {}; ['name','company','title','phone','email','address'].forEach(k => out[k] = String(j[k] || '').trim());
+    return out;
+  } finally { clearTimeout(to); }
+}
 
-  // Yüksek kalite interpolasyon
-  ctx.imageSmoothingEnabled  = true;
-  ctx.imageSmoothingQuality  = 'high';
-  ctx.drawImage(srcCanvas, 0, 0, w, h);
+/* ═══════════════════════════════════════
+   AYRIŞTIRMA (Türkçe kartvizit)
+═══════════════════════════════════════ */
+const RX = {
+  suffix : /\b(ltd\.?\s*sti\.?|ltd\b|a\.\s?s\.?(?=\s|$)|limited|anonim|san\.?\s*(ve\s*)?tic\.?|tic\.?\s*ltd|inc\.?|corp\.?|gmbh|llc|sirketi|co\.)/,
+  firmaKw: /\b(holding|group|grup|teknoloji|sistem\w*|danismanlik|yazilim|endustri\w*|makina|makine|insaat|otomotiv|elektrik|elektronik|enerji|metal|tekstil|gida|iletisim|medya|reklam|sigorta|finans|muhendislik|ithalat|ihracat|kimya|plastik|lastik|nakliyat?|lojistik|mimarlik|gayrimenkul|turizm|otelcilik|ticaret|pazarlama|ambalaj|tarim|saglik|egitim|bilisim|yapi|celik|demir|otomasyon|cozumleri|hizmetleri|urunleri|laboratuvar\w*)\b/,
+  title  : /\b(genel mudur\w*|yonetim kurulu|mudur yardimcisi|mudur yrd\.?|satis mudur\w*|bolge mudur\w*|proje mudur\w*|teknik mudur\w*|mudur\w*|general manager|manager|muhendis\w*|engineer|direktor\w*|director|baskan\w*|president|ceo|cto|cfo|coo|cmo|uzman\w*|specialist|koordinator\w*|coordinator|temsilci\w*|representative|danisman\w*|consultant|sorumlu\w*|yetkili\w*|asistan\w*|assistant|sekreter\w*|secretary|supervisor|sef|lead|lider|partner|ortag\w*|kurucu\w*|founder|owner|sahib\w*|satis (elemani|danismani)|sales|export manager)\b/,
+  addr   : /\b(mah\.?|mh\.?|mahalle\w*|cad\.?|cd\.?|cadde\w*|sok\.?|sk\.?|sokak|sokag\w*|blv\.?|bulvar\w*|apt\.?|plaza|is merkezi|organize sanayi|sanayi (bolgesi|sitesi|mah\w*|cad\w*)|osb|koyu|kasaba\w*|ilce\w*|posta kodu|pk)\b|\bno\s*[:.]\s*\d|\bkat\s*[:.]\s*\d|\bdaire\b|\b\d{5}\b\s*[a-z]/,
+  city   : /\b(istanbul|ankara|izmir|bursa|antalya|adana|konya|gaziantep|kocaeli|mersin|kayseri|eskisehir|denizli|samsun|trabzon|tekirdag|sakarya|manisa|balikesir|hatay|diyarbakir|malatya|erzurum|mugla|aydin|corum|bolu|duzce|edirne|gebze|kadikoy|atasehir|umraniye|besiktas|sisli|pendik|tuzla|maslak|bakirkoy|esenyurt|beylikduzu|basaksehir|kartal|maltepe|sancaktepe|sultanbeyli|cekmekoy|bagcilar|bayrampasa|kagithane|sariyer|levent)\b/,
+  web    : /www\.|https?:|\.com\b|\.net\b|\.org\b|\.tr\b|\bweb\b/,
+  fax    : /^\s*(fax|faks|f)\s*[:.\/]/,
+  phone  : /(?:\+\s*90[\s.\-\/]?)?(?:\(\s*0?\s*\d{3}\s*\)|0\s*\d{3}|\d{3})[\s.\-\/]?\d{3}[\s.\-\/]?\d{2}[\s.\-\/]?\d{2}/,
+  word   : /^[A-ZÇĞİÖŞÜa-zçğıöşü][A-ZÇĞİÖŞÜa-zçğıöşü'’\-]*\.?$/
+};
 
-  enhanceContrast(ctx, w, h);
-  return out;
+function fmtPhone(raw) {
+  let d = String(raw).replace(/\D/g,'');
+  const plus = /^\s*\+/.test(raw) || (d.length === 12 && d.startsWith('90'));
+  if (d.length === 12 && d.startsWith('90')) return '+90 ' + d.slice(2,5) + ' ' + d.slice(5,8) + ' ' + d.slice(8,10) + ' ' + d.slice(10);
+  if (d.length === 11 && d[0] === '0') return d.slice(0,4) + ' ' + d.slice(4,7) + ' ' + d.slice(7,9) + ' ' + d.slice(9);
+  if (d.length === 10) return d.slice(0,3) + ' ' + d.slice(3,6) + ' ' + d.slice(6,8) + ' ' + d.slice(8);
+  return (plus ? '+' : '') + d;
 }
 
 function smartParse(text) {
-  // ── Satırları temizle ──
-  const rawLines = text.split('\n').map(l => l.trim());
-  const lines    = rawLines.filter(l => l.length > 1);
+  const lines = text.split('\n').map(cleanLine).filter(l => l.length > 1);
+  const F = lines.map(fold);
+  const type = lines.map((l, i) => {
+    const f = F[i];
+    if (/@/.test(f)) return 'email';
+    if (RX.fax.test(f)) return 'fax';
+    if (RX.web.test(f)) return 'web';
+    if (RX.suffix.test(f) && !/\d{2,}/.test(f)) return 'company';
+    if (RX.addr.test(f)) return 'addr';
+    if (RX.phone.test(f.replace(/\s+/g,' ')) && (f.match(/\d/g) || []).length >= 10) return 'phone';
+    if (RX.suffix.test(f)) return 'company';
+    if (RX.title.test(f) && l.length < 60) return 'title';
+    if (RX.firmaKw.test(f)) return 'company';
+    if (RX.city.test(f) && /[\/,\-]/.test(f)) return 'addr';
+    return 'other';
+  });
 
-  // ── E-posta ──
-  const emailM = text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/i);
+  // E-posta
+  const joined = text.replace(/\s*@\s*/g, '@');
+  const emailM = joined.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}/);
 
-  // ── Telefon — kapsamlı Türkçe deseni ──
-  // Formatlar: 0212 xxx xx xx / +90 212 xxx xx xx / 0532 xxx xx xx / (0532) xxx xx xx / 532-xxx-xx-xx
-  const phoneRaw = text.replace(/[\u00AD\u2010-\u2015\u2212\uFE58\uFE63\uFF0D]/g, '-'); // unicode tire normalize
-  const phoneRegex = /(?:\+\s*90[\s.\-\/]?)?(?:\(\s*0?\s*\d{3}\s*\)|0\s*\d{3}|\d{3})[\s.\-\/]?\d{3}[\s.\-\/]?\d{2}[\s.\-\/]?\d{2}/g;
-  const phones = [...new Set(
-    [...phoneRaw.matchAll(phoneRegex)]
-      .map(m => m[0].replace(/\s+/g,' ').trim())
-      .filter(p => p.replace(/\D/g,'').length >= 10)
-  )];
+  // Telefon (faks hariç, e-posta/adres satırları hariç)
+  const seen = new Set(), phones = [];
+  lines.forEach((l, i) => {
+    if (['fax','email','addr'].includes(type[i])) return;
+    const t = l.replace(/[\u00AD\u2010-\u2015\u2212]/g, '-');
+    [...t.matchAll(new RegExp(RX.phone.source, 'g'))].forEach(m => {
+      const d = m[0].replace(/\D/g, '');
+      if (d.length < 10) return;
+      const key = d.slice(-10);
+      if (!seen.has(key)) { seen.add(key); phones.push(fmtPhone(m[0])); }
+    });
+  });
 
-  // ── Firma — önce uzantılı satır ara ──
-  // "Ltd. Şti.", "A.Ş.", "San. ve Tic.", "Inc.", vb.
-  const firmaSuffix = /\b(ltd\.?\s*şti\.?|a\.?\s*ş\.?|limited\s*şirketi?|san\.?\s*(ve\s*)?tic\.?|pazarlama\s*a\.?\s*ş|tic\.?\s*ltd|inc\b|corp\b|gmbh\b|s\.?\s*a\.?\s*r\.?\s*l|llc\b)/i;
-  const firmaKw    = /\b(holding|group|teknoloji|sistemler?|danışmanlık|yazılım|endüstri(?:yel)?|maki[nı]a|inşaat|otomotiv|elektrik|elektronik|enerji|metal|tekstil|gıda|iletişim|medya|reklam|sigorta|finans|mühendislik|ithalat|ihracat|kimya|plastik|lastik|nakliye|lojistik|mimarlık|gayrimenkul|turizm|otelcilik)\b/i;
+  // Firma (uzantılı satır öncelikli) + sonraki satır sadece "Ltd. Şti." gibi ise birleştir
+  let ci = type.findIndex((t, i) => t === 'company' && RX.suffix.test(F[i]));
+  if (ci < 0) ci = type.indexOf('company');
+  let company = ci >= 0 ? lines[ci] : '';
+  if (ci >= 0 && ci + 1 < lines.length && lines[ci+1].length <= 16 && RX.suffix.test(F[ci+1]) && !RX.suffix.test(F[ci])) company += ' ' + lines[ci+1];
 
-  let company = lines.find(l => firmaSuffix.test(l) && !/@/.test(l) && l.length > 2) || '';
-  if (!company) company = lines.find(l => firmaKw.test(l) && !/@/.test(l) && l.length > 2) || '';
+  // Ünvan
+  const ti = type.indexOf('title');
+  const title = ti >= 0 ? lines[ti] : '';
 
-  // ── Ünvan — geniş anahtar listesi ──
-  const titleKw = /\b(genel\s*müdür|yönetim\s*kur|müdür\s*yrd|satış\s*müdür|bölge\s*müdür|proje\s*müdür|teknik\s*müdür|müdür|general\s*manager|manager|mühendis|engineer|direktör|director|başkan\s*yrd?|başkan|president|vice\s*president|ceo|cto|cfo|coo|cmo|chro|uzman|specialist|koordinatör|coordinator|satış\s*temsilci|temsilci|representative|danışman|consultant|sorumlu|yetkili|asistan|assistant|sekreter|secretary|supervisor|şef|chef|lead|lider|partner|ortağı?|kurucu|founder|owner|sahib[i]?)\b/i;
-  const title = lines.find(l => titleKw.test(l) && l.length < 80 && !firmaSuffix.test(l)) || '';
+  // Adres (en fazla 3 satır)
+  const address = lines.filter((l, i) => type[i] === 'addr').slice(0, 3).join(', ');
 
-  // ── Adres — anahtar kelime ve/veya uzun rakam içeren satır ──
-  const addrKw = /\b(mah\.|mh\.|cad\.|cd\.|sok\.|sk\.|blv\.|bulvar[iı]|mahalle?s?i?|caddes[i]?|sokağ[i]?|no\s*[:.]|kat\s*[:.]|d\s*[:.]|daire|apt\.|plaza|iş\s*merkezi|organize|sanayi|bölges[i]?|köyü?|kasabas[i]?|ilçes[i]?|posta\s*kodu?|p\.?\s*k\.?)\b/i;
-  const address = lines.find(l => addrKw.test(l) && l.length > 8 && l !== company) || '';
+  // İsim: yalnızca "diğer" satırlar, 2–4 kelime, büyük harfle başlayan harf kelimeleri; ünvana yakınlık + üst sıra puanı
+  let name = '', bestS = -1;
+  lines.forEach((l, i) => {
+    if (type[i] !== 'other') return;
+    const words = l.split(/\s+/);
+    if (words.length < 2 || words.length > 4) return;
+    if (!words.every(w => RX.word.test(w) && w.replace(/[^A-Za-zÇĞİÖŞÜçğıöşü]/g,'').length >= 2)) return;
+    if (!words.every(w => /^[A-ZÇĞİÖŞÜ]/.test(w))) return;
+    let s = 10 - i*0.6;
+    if (ti >= 0 && Math.abs(i - ti) === 1) s += 4;
+    if (s > bestS) { bestS = s; name = l; }
+  });
 
-  // ── İsim ──
-  // Strateji: company ve title'ı çıkar, geriye kalan ilk "ad soyad" formatındaki satır
-  // Türkçe büyük harf: A-Z + ÇĞİÖŞÜ
-  const trUpper = /^[A-ZÇĞİÖŞÜ]/;
-  const trLetter = /^[A-ZÇĞİÖŞÜa-zçğışöşü]+$/;
+  return { name, company, title, phone: phones.join('; '), email: emailM ? emailM[0] : '', address };
+}
 
-  const nameCandidate = lines.find(l => {
-    if (!l || l === company || l === title || l === address) return false;
-    if (/@|https?:|www\.|tel:|fax:|e-?mail:/i.test(l)) return false;
-    if (/\d{3,}/.test(l)) return false; // uzun sayı bloğu → telefon/adres
-    if (firmaSuffix.test(l) || firmaKw.test(l)) return false;
-    if (titleKw.test(l)) return false;
-    const words = l.split(/\s+/).filter(w => w.length > 0);
-    if (words.length < 2 || words.length > 5) return false;
-    // Her kelime büyük harfle başlamalı ve sadece harf içermeli
-    return words.every(w => trUpper.test(w) && trLetter.test(w.replace(/['\-\.]/g,'')));
-  }) || '';
+/* ═══════════════════════════════════════
+   SESLİ GİRİŞ (Web Speech API, tr-TR)
+═══════════════════════════════════════ */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SR) document.documentElement.classList.add('no-sr');
+let recog = null, recBtn = null, guidedStop = false;
 
-  return {
-    name:    nameCandidate,
-    company: company,
-    title:   title,
-    phone:   phones.join('; '),
-    email:   emailM ? emailM[0] : '',
-    address: address
-  };
+const VOICE_FIELDS = {
+  fName:'name', fCompany:'tc', fTitle:'tc', fPhone:'tel', fEmail:'email', fAddress:'text', fNote:'text',
+  eName:'name', eCompany:'tc', eTitle:'tc', ePhone:'tel', eEmail:'email', eAddress:'text', eNote:'text'
+};
+const DIGIT_WORDS = { sifir:'0', bir:'1', iki:'2', uc:'3', dort:'4', bes:'5', alti:'6', yedi:'7', sekiz:'8', dokuz:'9', arti:'+' };
+
+function normVoice(kind, t) {
+  t = String(t || '').trim();
+  if (kind === 'tel') {
+    const s = fold(t).split(/\s+/).map(w => DIGIT_WORDS[w] !== undefined ? DIGIT_WORDS[w] : w).join('');
+    const d = s.replace(/[^\d+]/g, '');
+    return d.replace(/\D/g,'').length >= 10 ? fmtPhone(d) : d;
+  }
+  if (kind === 'email') {
+    let s = fold(t);
+    if (!s.includes('@')) s = s.replace(/\s*\b(et isareti|at isareti|kuyruklu a|et|at)\b\s*/, '@');
+    s = s.replace(/\bnokta\b/g,'.').replace(/\b(alt cizgi|alt tire)\b/g,'_').replace(/\btire\b/g,'-')
+         .replace(/\.kom\b/g,'.com').replace(/\s+/g,'');
+    return s;
+  }
+  if (kind === 'name' || kind === 'tc') return titleCase(t);
+  return t.charAt(0).toLocaleUpperCase('tr') + t.slice(1);
+}
+
+function listenOnce() {
+  return new Promise((resolve, reject) => {
+    if (!SR) return reject(new Error('unsupported'));
+    const r = new SR(); r.lang = 'tr-TR'; r.interimResults = false; r.maxAlternatives = 1; r.continuous = false;
+    let got = '', err = '';
+    r.onresult = e => { got = e.results[0][0].transcript; };
+    r.onerror = e => { if (e.error !== 'no-speech' && e.error !== 'aborted') err = e.error; };
+    r.onend = () => { recog = null; err ? reject(new Error(err)) : resolve(got); };
+    recog = r;
+    try { r.start(); } catch(e) { reject(e); }
+  });
+}
+
+function stopVoice() {
+  guidedStop = true;
+  if (recog) { try { recog.abort(); } catch(_) {} recog = null; }
+  if (recBtn) { recBtn.classList.remove('rec'); recBtn = null; }
+  document.querySelectorAll('.field.voice-on').forEach(f => f.classList.remove('voice-on'));
+}
+
+function voiceError(e) {
+  const m = e && e.message;
+  if (m === 'not-allowed' || m === 'service-not-allowed') toast('Mikrofon izni verilmedi — tarayıcı ayarlarından izin verin','warn');
+  else if (m === 'unsupported') toast('Bu tarayıcı sesli girişi desteklemiyor (Chrome / Safari kullanın)','warn');
+  else if (m === 'network') toast('Sesli giriş için internet bağlantısı gerekli','warn');
+  else toast('Ses alınamadı, tekrar deneyin','warn');
+}
+
+function applyVoice(id, text) {
+  const el = g(id); if (!el) return false;
+  const v = normVoice(VOICE_FIELDS[id], text);
+  if (!v) return false;
+  el.value = (/Note$/.test(id) && el.value) ? el.value + ' ' + v : v;
+  el.dispatchEvent(new Event('input', { bubbles:true }));
+  return true;
+}
+
+async function voiceField(id, btn) {
+  if (recBtn === btn) { stopVoice(); return; }
+  stopVoice(); guidedStop = false;
+  recBtn = btn; btn.classList.add('rec');
+  try {
+    const t = await listenOnce();
+    if (recBtn === btn) { if (!applyVoice(id, t)) toast('Anlaşılamadı, tekrar deneyin','warn'); }
+  } catch(e) { voiceError(e); }
+  btn.classList.remove('rec'); if (recBtn === btn) recBtn = null;
+}
+
+// Alanlara 🎙️ düğmesi ekle
+function injectMics() {
+  Object.keys(VOICE_FIELDS).forEach(id => {
+    const el = g(id); if (!el || el.dataset.mic) return;
+    el.dataset.mic = '1';
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'mic-btn'; b.title = 'Sesle doldur'; b.textContent = '🎙️';
+    b.onclick = () => voiceField(id, b);
+    el.parentNode.appendChild(b);
+  });
+}
+
+// Sırayla sor: boş alanları tek tek söylet ("geç" = atla, "bitti" = dur)
+const GUIDE = [
+  ['fName','İsim Soyisim'], ['fCompany','Firma adı'], ['fTitle','Ünvan'],
+  ['fPhone','Telefon numarası'], ['fEmail','E-posta (örn. ahmet et gmail nokta com)'],
+  ['fAddress','Adres'], ['fNote','Not']
+];
+async function startGuided() {
+  stopVoice();
+  if (!SR) { voiceError(new Error('unsupported')); return; }
+  // Kameradan geliyorsak boş form aç
+  if (!g('camView').classList.contains('hidden')) {
+    stopCamera();
+    g('camView').classList.add('hidden'); g('resultView').classList.remove('hidden');
+    document.querySelector('.preview-wrap').classList.add('hidden');
+    g('formWrap').classList.remove('hidden');
+    g('engLabel').textContent = 'Sesli giriş';
+    clearScanForm();
+  }
+  const todo = GUIDE.filter(([id]) => !g(id).value.trim());
+  if (!todo.length) { toast('Tüm alanlar dolu — düzeltmek için alandaki 🎙️ düğmesini kullanın','info'); return; }
+  guidedStop = false;
+  for (const [id, label] of todo) {
+    if (guidedStop) break;
+    const f = g(id).closest('.field'); f.classList.add('voice-on'); f.scrollIntoView({ block:'center', behavior:'smooth' });
+    setStatus('mic', label + ' söyleyin…', '“geç” = atla · “bitti” = durdur');
+    try {
+      const t = await listenOnce();
+      const c = fold(t).replace(/[^a-z ]/g,'').trim();
+      if (['bitti','dur','tamam','iptal'].includes(c)) { guidedStop = true; }
+      else if (c && !['gec','atla'].includes(c)) applyVoice(id, t);
+    } catch(e) { voiceError(e); guidedStop = true; }
+    f.classList.remove('voice-on');
+  }
+  setStatus('ok', 'Sesli doldurma bitti', 'Kontrol edip kaydedin');
 }
 
 function setStatus(state, title, sub) {
@@ -950,7 +1285,7 @@ function setStatus(state, title, sub) {
   if(state!=='spinner') {
     let ico=g('stIcon');
     if(!ico){ ico=document.createElement('span'); ico.id='stIcon'; ico.style.fontSize='18px'; sp.parentNode.insertBefore(ico,sp.nextSibling); }
-    ico.textContent=state==='ok'?'✅':'⚠️';
+    ico.textContent=state==='ok'?'✅':state==='mic'?'🎙️':'⚠️';
   }
   g('stTitle').textContent=title; g('stSub').textContent=sub;
 }
@@ -1146,12 +1481,9 @@ function gotoPage(name) {
   g('pg-'+name).classList.add('active');
   g('nav-'+name).classList.add('active');
   if(name==='scan') {
-    // Kamera henüz başlamadıysa veya durdurulduysa başlat
-    const video = g('video');
-    if (!video.srcObject || !video.srcObject.active) startCamera();
+    if(!g('camView').classList.contains('hidden')) startCamera();
   } else {
-    // Scan dışına geçince kamerayı durdur (pil ve gizlilik)
-    stopCamera();
+    stopCamera(); stopVoice(); // pil ve gizlilik
   }
   if(name==='cards') renderCards(allCards);
   if(name==='search') renderAdv(allCards);
@@ -1165,7 +1497,7 @@ function openAdmin() {
   showScreen('adminScreen');
   loadAdminData();
 }
-function closeAdmin() { showScreen('mainApp'); }
+function closeAdmin() { showScreen('mainApp'); if (isScanActive()) startCamera(); }
 
 function adminTab(name) {
   document.querySelectorAll('.adm-tab').forEach(t=>t.classList.remove('active'));
@@ -1608,4 +1940,74 @@ async function sendEmail() {
 
 </script>
 </body>
+
+<!--
+═══ İSTEĞE BAĞLI: AKILLI TARAMA WORKER KODU ═══
+Sadece CFG.aiUrl kullanacaksanız gerekir. Aşağıdaki kodu Cloudflare Worker'a yapıştırın.
+Kullanmayacaksanız bu yorumu silebilirsiniz; uygulama yalnızca yerel OCR ile çalışır.
+
+/**
+ * GMTCard PRO — İsteğe bağlı "akıllı tarama" proxy'si (Cloudflare Worker)
+ *
+ * KURULUM (5 dk, ücretsiz plan yeterli):
+ * 1) dash.cloudflare.com → Workers & Pages → Create → "Hello World" → bu dosyanın içeriğini yapıştırıp Deploy
+ * 2) Worker → Settings → Variables and Secrets:
+ *      ANTHROPIC_API_KEY  (Secret)  : Anthropic API anahtarınız
+ *      APP_TOKEN          (Secret)  : kendi belirlediğiniz uzun rastgele bir metin
+ *      ALLOWED_ORIGIN     (Text)    : https://ygtprog.github.io
+ *      MODEL              (Text, opsiyonel): varsayılan claude-haiku-5-5
+ * 3) Worker adresini (https://xxx.workers.dev) index.html içindeki CFG.aiUrl'e,
+ *    APP_TOKEN değerini CFG.aiToken'a yazın.
+ *
+ * Not: API anahtarı tarayıcıya hiç gitmez. Kart fotoğrafı yalnızca bu Worker üzerinden
+ * Anthropic API'ye gönderilir. aiUrl boş bırakılırsa uygulama yalnızca yerel OCR kullanır.
+ */
+const PROMPT = 'Bu görsel bir kartvizit. SADECE şu JSON nesnesini döndür, başka hiçbir şey yazma: ' +
+  '{"name":"","company":"","title":"","phone":"","email":"","address":""}. ' +
+  'Kurallar: Görselde açıkça okunamayan veya olmayan alanı boş bırak, ASLA tahmin etme. ' +
+  'Birden fazla telefon varsa "; " ile ayır, faks numaralarını ekleme. ' +
+  'Türkçe karakterleri (ç ğ ı ö ş ü) doğru yaz. Zemin desenli/renkli olabilir.';
+
+export default {
+  async fetch(req, env) {
+    const allowed = env.ALLOWED_ORIGIN || 'https://ygtprog.github.io';
+    const cors = {
+      'Access-Control-Allow-Origin': allowed,
+      'Access-Control-Allow-Headers': 'content-type,x-app-token',
+      'Access-Control-Allow-Methods': 'POST,OPTIONS',
+      'Vary': 'Origin'
+    };
+    if (req.method === 'OPTIONS') return new Response(null, { headers: cors });
+    if (req.method !== 'POST' || req.headers.get('Origin') !== allowed ||
+        (env.APP_TOKEN && req.headers.get('x-app-token') !== env.APP_TOKEN)) {
+      return new Response('Forbidden', { status: 403, headers: cors });
+    }
+    let image;
+    try { ({ image } = await req.json()); } catch (_) {}
+    if (!image || image.length > 4_000_000) return new Response('Bad request', { status: 400, headers: cors });
+
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: env.MODEL || 'claude-haiku-5-5',
+        max_tokens: 500,
+        messages: [{ role: 'user', content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: image } },
+          { type: 'text', text: PROMPT }
+        ] }]
+      })
+    });
+    if (!r.ok) return new Response('Upstream error', { status: 502, headers: cors });
+    const data = await r.json();
+    const txt = ((data.content || []).find(c => c.type === 'text') || {}).text || '{}';
+    let out = {};
+    try { out = JSON.parse(txt.replace(/```json|```/g, '').trim()); } catch (_) {}
+    const clean = {};
+    ['name', 'company', 'title', 'phone', 'email', 'address'].forEach(k => clean[k] = String(out[k] || '').slice(0, 300));
+    return new Response(JSON.stringify(clean), { headers: { ...cors, 'Content-Type': 'application/json' } });
+  }
+};
+
+-->
 </html>
