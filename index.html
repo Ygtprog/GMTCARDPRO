@@ -1840,15 +1840,21 @@ async function shareXlsx() {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Rapor');
   const name = `gmtcard_rapor_${new Date().toISOString().slice(0,10)}.xlsx`;
-  const buf = XLSX.write(wb, { bookType:'xlsx', type:'array' });
-  const file = new File([buf], name, { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  if (navigator.canShare && navigator.canShare({ files:[file] })) {
-    try {
-      await navigator.share({ files:[file], title:'GMTCard PRO Raporu', text:`GMTCard PRO Raporu — ${reportData.length} kayıt` });
-    } catch(e) { if (e.name !== 'AbortError') toast('Paylaşım hatası: ' + e.message, 'error'); }
-  } else {
+  const download = () => {
     XLSX.writeFile(wb, name);
-    toast('Bu cihaz dosya paylaşımını desteklemiyor — Excel indirildi, WhatsApp\'a elle ekleyin','info');
+    toast('Excel indirildi — WhatsApp\'ta 📎 ile ekleyip gönderin','info');
+  };
+  // Masaüstünde dosya paylaşımı çoğu zaman engelli: doğrudan indir
+  const mobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (!mobile || !navigator.canShare) { download(); return; }
+  try {
+    const buf = XLSX.write(wb, { bookType:'xlsx', type:'array' });
+    const file = new File([buf], name, { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    if (!navigator.canShare({ files:[file] })) { download(); return; }
+    await navigator.share({ files:[file], title:'GMTCard PRO Raporu', text:`GMTCard PRO Raporu — ${reportData.length} kayıt` });
+  } catch(e) {
+    if (e && e.name === 'AbortError') return;   // kullanıcı paylaşımı kapattı
+    download();                                  // izin/destek hatası: indirmeye düş
   }
 }
 
